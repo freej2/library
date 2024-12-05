@@ -8,8 +8,18 @@
 </head>
 <body>
     <div class="books">
-        
     </div>
+    <button id="addBookButton">Add New Book</button>
+    <dialog id="bookForm">
+        <input type="text" id="title" placeholder="Title" required>
+        <input type="text" id="author" placeholder="Author" required>
+        <input type="number" id="pages" placeholder="Pages" required>
+        <select id="haveRead">
+            <option value="Have read">Have Read</option>
+            <option value="Have not read">Have Not Read</option>
+        </select>
+        <button id="submitBook">Submit</button>
+    </dialog>
     <script src="script.js"></script>
 </body>
 </html>
