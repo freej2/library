@@ -1,34 +1,52 @@
-const myLibrary = [];
-
-function Book(title, author, pages, haveRead) {
-    this.title = title;
-    this.author = author;
-    this.pages = pages;
-    this.haveRead = haveRead === "have read";
-    this.info = function(){
-        let readStatus = this.haveRead ? "have read" : "have not read";
-        let info = title + " by " + author + ", " + pages + " pages, " + readStatus;
-        return info;
+class Book {
+    constructor(title, author, pages, haveRead){
+        this.title = title;
+        this.author = author;
+        this.pages = pages;
+        this.haveRead = haveRead === 'have read';
     }
-    this.toggleRead = function() {
+
+    info() {
+        let readStatus = this.haveRead ? "have read" : "have not read";
+        return `${this.title} by ${this.author}, ${this.pages} pages, ${readStatus}`;
+    }
+
+    toggleRead() {
         this.haveRead = !this.haveRead;
     }
+    
 }
 
-function addBookToLibrary(title, author, pages, haveRead){
-    const newBook = new Book(title, author, pages, haveRead);
-    myLibrary.push(newBook);
+class Library {
+    constructor() {
+        this.books = [];
+    }
+
+    addBook(title, author, pages, haveRead) {
+        const newBook = new Book (title, author, pages, haveRead);
+        this.books.push(newBook);
+    }
+
+    removeBook(index){
+        this.books.splice(index, 1);
+    }
+
+    toggleBookStatus(index) {
+        this.books[index].toggleRead();
+    }
 }
 
-addBookToLibrary("book1", "author1",278, "have not read");
-addBookToLibrary("book2", "author2",78, "have read");
-addBookToLibrary("book3", "author3",496, "have not read");
-console.log(myLibrary);
+const myLibrary = new Library();
+
+
+myLibrary.addBook("book1", "author1",278, "have not read");
+myLibrary.addBook("book2", "author2",78, "have read");
+myLibrary.addBook("book3", "author3",496, "have not read");
 
 function displayBooks(){
     const booksContainer = document.querySelector('.books');
     booksContainer.innerHTML = '';
-    myLibrary.forEach((book, index) => {
+    myLibrary.books.forEach((book, index) => {
         const bookDiv = document.createElement('div');
         bookDiv.classList.add('book');
         bookDiv.textContent = book.info();
@@ -51,13 +69,13 @@ document.addEventListener('click', (e) => {
     if (e.target.classList.contains('remove')) {
         const bookDiv = e.target.closest('.book');
         const index = parseInt(bookDiv.dataset.bookIndex);
-        myLibrary.splice(index, 1);
+        myLibrary.removeBook(index);
         displayBooks();
     }
     if (e.target.classList.contains('toggle-read')) {
         const bookDiv = e.target.closest('.book');
         const index = parseInt(bookDiv.dataset.bookIndex);
-        myLibrary[index].toggleRead();
+        myLibrary.toggleBookStatus(index);
         displayBooks();
     }
 });
@@ -75,15 +93,14 @@ document.getElementById('submitBook').addEventListener('click', () => {
     const haveRead = document.getElementById('haveRead').value;
 
     if (title && author && pages) {
-        addBookToLibrary(title, author, pages, haveRead);
+        myLibrary.addBook(title, author, pages, haveRead);
         displayBooks();
         document.getElementById('bookForm').close();
+        document.getElementById('bookForm').reset();
     } else {
         alert('Please fill out all fields');
     }
 });
-
-
 
 
 document.addEventListener('DOMContentLoaded', (event) => {
